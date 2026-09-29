@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>מחולל תחקיר</title>
+<link href="https://fonts.googleapis.com/css2?family=David+Libre:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap" id="formWrap">
+  <img id="topLogo" class="top-logo" alt="סמל בה&quot;ד 1"><h1 class="form-title">מחולל תחקיר</h1>
+  <div class="sub">מלאו את הפרטים ולחצו על הכפתור בתחתית — תוכלי לצפות בתצוגה מקדימה ולהוריד  כ-Word.</div>
+
+  <div class="classification-banner">
+    <b>שימו לב:</b> כל תוכן שמוקלד בטופס זה מיועד לרמת סיווג <b>בלמ"ס</b> בלבד. אין להזין מידע ברמת סיווג גבוהה יותר.
+  </div>
+
+  <form id="mainForm">
+    <div class="card">
+      <h2>פרטי המסמך</h2>
+      <label for="title">כותרת העבודה</label>
+      <input type="text" id="title" required>
+
+      <label for="fullName">שם מלא</label>
+      <input type="text" id="fullName" required>
+
+      <div class="row2">
+        <div>
+          <label for="rank">דרגה</label>
+          <input type="text" id="rank" required>
+        </div>
+        <div>
+          <label for="tafkid">תפקיד</label>
+          <input type="text" id="tafkid" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+            <label for="megama">מגמה</label>
+      <select id="megama" required>
+        <option value="" disabled selected hidden>בחירה</option>
+        <option value="נחשון">נחשון</option>
+        <option value="מעוז">מעוז</option>
+        <option value="לוחמים">לוחמים</option>
+        <option value="מומחים">מומחים</option>
+      </select>
+
+      <div class="row2">
+        <div>
+          <label for="gdod">גדוד</label>
+          <select id="gdod" required></select>
+        </div>
+        <div>
+          <label for="pluga">פלוגה</label>
+          <input type="text" id="pluga" required>
+        </div>
+      </div>
+
+      <label for="tzevet">צוות</label>
+      <input type="text" id="tzevet" required>
+
+      <div class="logo-preview">
+        <img id="battalionLogoImg" src="" alt="סמל גדוד">
+        <span>סמל הגדוד שיופיע במסמך</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>תוכן המסמך</h2>
+      <label for="nidon">הנידון</label>
+      <input type="text" id="nidon" required>
+
+      <label for="klali">כללי</label>
+      <textarea id="klali" required></textarea>
+
+      <label for="mokedTahkir">מוקד תחקיר</label>
+      <textarea id="mokedTahkir" required></textarea>
+
+      <label for="tihum">תיחום התחקיר</label>
+      <textarea id="tihum" required></textarea>
+
+      <label for="lekachim">לקחים</label>
+      <textarea id="lekachim" required></textarea>
+    </div>
+
+    <button type="button" id="generateBtn">תצוגה מקדימה</button>
+  </form>
+</div>
+
+<div class="wrap" id="previewSection" style="display:none">
+  <h1>תצוגה מקדימה</h1>
+  <div class="sub">כך ייראה הקובץ. אם הכול תקין, לחצי על "הורד Word".</div>
+  <div class="preview-actions"><button type="button" id="backBtn" class="secondary">חזרה לעריכה</button><button type="button" id="wordBtn">הורד Word</button><button type="button" id="pdfBtn">הורד PDF</button></div>
+  <div class="preview-outer"><div id="previewFrame">
+<div id="pdfPage">
+  <div class="pdf-classification">בלמ"ס</div>
+  <div class="pdf-header">
+    <div class="pdf-org-block">
+      <div class="bold">בית הספר לקצינים</div>
+      <div class="bold">ע"ש רא"ל לסקוב</div>
+      <div class="bold">גדוד <span id="docGdod"></span></div>
+      <div class="bold">פלוגת <span id="docPluga"></span></div>
+      <div>טלפון המטכ"לי: 03-9876543</div>
+      <div>טלפון האזרחי: 03-1234567</div>
+      <div>מספר הפקס: 03-1928376</div>
+      <div id="docHebDate"></div>
+      <div id="docGregDate"></div>
+    </div>
+    <div class="pdf-logos">
+      <img id="behadLogoImg" src="" alt="סמל בה\"ד 1">
+      <img id="battalionLogoImg2" src="" alt="סמל גדוד">
+    </div>
+  </div>
+  <div class="pdf-title" id="docTitle"></div>
+  <div class="pdf-nidon"><b>הנידון:</b> <span id="docNidon"></span></div>
+  <div class="pdf-section"><b>כללי:</b><span id="docKlali"></span></div>
+  <div class="pdf-section"><b>מוקד תחקיר:</b><span id="docMokedTahkir"></span></div>
+  <div class="pdf-section"><b>תיחום התחקיר:</b><span id="docTihum"></span></div>
+  <div class="pdf-section"><b>לקחים:</b><span id="docLekachim"></span></div>
+  <div class="pdf-sig"><div class="pdf-sig-inner">
+    <div id="docFullName"></div>
+    <div id="docRank"></div>
+    <div id="docGdodTafkid"></div>
+    <div class="static-line">צוער בבית הספר לקצינים</div>
+  </div>
+</div>
+</div>
+</div></div>
+</div>
+
+
+<!-- ספריית יצירת Word (מהאינטרנט) -->
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+<!-- קבצי הקוד של האתר, לפי סדר הטעינה -->
+<script src="js/logos-data.js"></script>
+<script src="js/config.js"></script>
+<script src="js/dates.js"></script>
+<script src="js/word-export.js"></script>
+<script src="js/form.js"></script>
+</body>
+</html>

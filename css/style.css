@@ -1,0 +1,95 @@
+/* עיצוב הדף: טופס, תצוגה מקדימה ומסמך (A4) */
+:root{
+  --bg:#f4f5f7; --card:#ffffff; --text:#1a1a1a; --muted:#6b6f76; --border:#dcdfe4;
+  --accent:#2c5f2d; --accent-text:#ffffff; --warn-bg:#fff4e5; --warn-border:#e8a33d; --warn-text:#7a4a00;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15171a; --card:#1f2225; --text:#eceef0; --muted:#9aa0a8; --border:#33373d;
+    --accent:#4caf50; --accent-text:#0b1a0b; --warn-bg:#3a2c10; --warn-border:#c8862a; --warn-text:#f2c98a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15171a; --card:#1f2225; --text:#eceef0; --muted:#9aa0a8; --border:#33373d;
+  --accent:#4caf50; --accent-text:#0b1a0b; --warn-bg:#3a2c10; --warn-border:#c8862a; --warn-text:#f2c98a;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0; background:var(--bg); color:var(--text); font-family:'David Libre', Georgia, serif;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.wrap{max-width:680px; margin:0 auto; padding:20px 16px 60px;}
+h1{font-size:20px; margin:6px 0 4px;}
+.sub{color:var(--muted); font-size:14px; margin-bottom:16px;}
+.classification-banner{
+  background:var(--warn-bg); border:1px solid var(--warn-border); color:var(--warn-text);
+  border-radius:10px; padding:12px 14px; font-size:14px; margin-bottom:18px; line-height:1.6;
+}
+.classification-banner b{font-weight:700;}
+.card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:16px;}
+.card h2{font-size:16px; margin:0 0 12px; color:var(--accent);}
+label{display:block; font-size:13px; color:var(--muted); margin:10px 0 4px;}
+input[type=text], select, textarea{
+  width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--border);
+  background:var(--bg); color:var(--text); font-family:inherit; font-size:15px;
+}
+textarea{min-height:70px; resize:vertical;}
+.row2{display:flex; gap:10px;}
+.row2>div{flex:1;}
+.logo-preview{display:flex; align-items:center; gap:10px; margin-top:10px;}
+.logo-preview img{width:56px; height:56px; object-fit:contain; background:transparent;}
+.logo-preview span{font-size:13px; color:var(--muted);}
+#generateBtn{
+  width:100%; padding:14px; border:none; border-radius:10px; background:var(--accent); color:var(--accent-text);
+  font-size:16px; font-weight:700; cursor:pointer; font-family:inherit; margin-top:6px;
+}
+#generateBtn:disabled{opacity:0.6;}
+
+/* ---- PDF page (A4) ---- */
+#pdfPage{
+  position:relative; width:210mm; box-sizing:border-box; background:#ffffff; color:#000000;
+  font-family:'David','David Libre','Times New Roman',serif; font-size:12pt;
+  padding:12mm 14mm 12mm 8mm; /* שוליים שמאליים מוקטנים כדי שהבלוקים בצד שמאל (סמל+פרטי הגדוד, וגוש החתימה) יזוזו יותר שמאלה */
+  direction:rtl;
+}
+.preview-outer{overflow:hidden; border:1px solid var(--border); background:#ffffff; margin-top:12px;}
+.preview-actions{display:flex; gap:10px;}
+.preview-actions button{flex:1; padding:12px; border:none; border-radius:10px; background:var(--accent); color:var(--accent-text); font-size:16px; font-weight:700; cursor:pointer; font-family:inherit;}
+.preview-actions button.secondary{background:var(--card); color:var(--text); border:1px solid var(--border);}
+.preview-actions button:disabled{opacity:.6;}
+.pdf-classification{text-align:center; font-weight:700; font-size:12pt; margin-bottom:4mm;}
+.pdf-header{direction:ltr; display:flex; justify-content:space-between; align-items:flex-start;}
+.pdf-org-block{
+  direction:rtl; font-size:12pt; line-height:1.5; width:54mm;
+  text-align:justify; text-align-last:justify; -webkit-text-align-last:justify; /* כל שורה מתפזרת לכל רוחב הבלוק ומתיישרת לשני הצדדים */
+}
+.pdf-org-block .bold{font-weight:700;}
+.pdf-logos{direction:ltr; display:flex; gap:3mm; background:#ffffff; padding:2mm;}
+.pdf-logos img{width:20mm; height:20mm; object-fit:contain;}
+.pdf-title{text-align:center; font-size:14pt; font-weight:700; margin:6mm 0 8mm;}
+.pdf-nidon{font-size:12pt; margin-bottom:6mm;}
+.pdf-nidon b{font-weight:700;}
+.pdf-section{font-size:12pt; margin-bottom:5mm;}
+.pdf-section b{display:block; font-weight:700; margin-bottom:1.5mm;}
+.pdf-sig{margin-top:14mm; direction:ltr; font-size:12pt; line-height:1.9;}
+.pdf-sig-inner{display:inline-flex; flex-direction:column; align-items:flex-end; direction:ltr;}
+.pdf-sig-inner > div{direction:rtl; white-space:nowrap;}
+.pdf-sig .static-line{margin-top:2mm;}
+
+/* ---- לוגו וכותרת בראש הטופס (הועברו מ-style בתוך ה-HTML) ---- */
+.top-logo{display:block; margin:0 auto 6px; width:72px; height:72px; object-fit:contain;}
+.form-title{text-align:center;}
+
+
+/* ---- הדפסה / שמירה כ-PDF: רק דף המסמך, בגודל A4, בדיוק כמו בתצוגה המקדימה ---- */
+@page{ size:A4; margin:12mm 14mm 12mm 8mm; }
+@media print{
+  html,body{height:auto; background:#ffffff;}
+  #formWrap, .preview-actions, #previewSection > h1, #previewSection > .sub{display:none !important;}
+  #previewSection{display:block !important; max-width:none; margin:0; padding:0;}
+  .preview-outer{border:none; margin:0; overflow:visible;}
+  #previewFrame{zoom:1 !important;}
+  #pdfPage{width:auto; padding:0; margin:0;}
+  .pdf-sig, .pdf-section b{break-inside:avoid;}
+}
