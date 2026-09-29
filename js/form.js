@@ -54,6 +54,13 @@ function buildDoc(){
   document.getElementById('docKlali').innerHTML = nl2br(v('klali'));
   document.getElementById('docMokedTahkir').innerHTML = nl2br(v('mokedTahkir'));
   document.getElementById('docTihum').innerHTML = nl2br(v('tihum'));
+
+    [['MahHaya','mahHaya'],['MahHayaTzarich','mahHayaTzarich'],['Pearim','pearim'],['SibotPearim','sibotPearim']].forEach(([docId,fieldId])=>{
+    const val = v(fieldId);
+    document.getElementById('doc'+docId).innerHTML = nl2br(val);
+    document.getElementById('sec'+docId).style.display = val.trim() ? '' : 'none';
+  });
+  
   document.getElementById('docLekachim').innerHTML = nl2br(v('lekachim'));
   document.getElementById('docFullName').textContent = v('fullName');
   document.getElementById('docRank').textContent = v('rank');
