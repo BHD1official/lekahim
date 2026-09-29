@@ -33,10 +33,12 @@ function populateGdod(){
 // מעדכן את לוגו הגדוד בטופס ובמסמך (היו שתי גרסאות של הפונקציה, אוחדו לאחת)
 function updateBattalionLogo(){
   const gdod = document.getElementById('gdod').value;
-  if(!LOGO_FILES[gdod]) return;
+  const box = document.querySelector('.logo-preview');
+  if(!LOGO_FILES[gdod]){ box.hidden = true; return; }   // עוד לא נבחר גדוד - מסתירים
   const src = LOGO_DIR + LOGO_FILES[gdod];
   document.getElementById('battalionLogoImg').src = src;
   document.getElementById('battalionLogoImg2').src = src;
+  box.hidden = false;                                    // נבחר גדוד - מציגים
 }
 
 /* ---------- מילוי המסמך מהנתונים בטופס ---------- */
