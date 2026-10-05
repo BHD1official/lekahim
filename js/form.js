@@ -7,10 +7,24 @@ function nl2br(s){ return esc(s).replace(/\n/g,'<br>'); }
 
 
 /* ---------- בחירת גדוד ולוגו ---------- */
+// מגמת "מפקדה": אין גדוד ופלוגה - לא בטופס, לא במסמך ולא בלוגו
+function isHq(){ return document.getElementById('megama').value === 'מפקדה'; }
+
 function populateGdod(){
   const megama = document.getElementById('megama').value;
   const gdodSel = document.getElementById('gdod');
+  const plugaInp = document.getElementById('pluga');
+  const row = document.getElementById('gdodPlugaRow');
   gdodSel.innerHTML = '';
+  if(megama === 'מפקדה'){
+    row.style.display = 'none';
+    gdodSel.required = false; plugaInp.required = false;
+    gdodSel.value = ''; plugaInp.value = '';
+    updateBattalionLogo();
+    return;
+  }
+  row.style.display = '';
+  gdodSel.required = true; plugaInp.required = true;
   const opts = MEGAMOT[megama] || [];
   if(opts.length===0){
     // עוד לא נבחרה מגמה - השדה ריק ונעול, עד שתיבחר מגמה
@@ -34,7 +48,9 @@ function populateGdod(){
 function updateBattalionLogo(){
   const gdod = document.getElementById('gdod').value;
   const box = document.querySelector('.logo-preview');
-  if(!LOGO_FILES[gdod]){ box.hidden = true; return; }   // עוד לא נבחר גדוד - מסתירים
+  const logo2 = document.getElementById('battalionLogoImg2');
+  if(!LOGO_FILES[gdod]){ box.hidden = true; logo2.style.display = 'none'; return; }   // עוד לא נבחר גדוד / מפקדה - מסתירים
+  logo2.style.display = '';
   const src = LOGO_DIR + LOGO_FILES[gdod];
   document.getElementById('battalionLogoImg').src = src;
   document.getElementById('battalionLogoImg2').src = src;
@@ -46,8 +62,11 @@ function buildDoc(){
   const v = id => document.getElementById(id).value;
   const now = new Date();
   document.getElementById('docTitle').textContent = v('title') || 'ללא כותרת';
+  const hq = isHq();
   document.getElementById('docGdod').textContent = v('gdod');
   document.getElementById('docPluga').textContent = v('pluga');
+  document.getElementById('docGdodLine').style.display = hq ? 'none' : '';
+  document.getElementById('docPlugaLine').style.display = hq ? 'none' : '';
   document.getElementById('docHebDate').textContent = getHebrewDateString(now);
   document.getElementById('docGregDate').textContent = getGregorianDateString(now);
   document.getElementById('docNidon').innerHTML = nl2br(v('nidon'));
@@ -64,7 +83,7 @@ function buildDoc(){
   document.getElementById('docLekachim').innerHTML = nl2br(v('lekachim'));
   document.getElementById('docFullName').textContent = v('fullName');
   document.getElementById('docRank').textContent = v('rank');
-  document.getElementById('docGdodTafkid').textContent = v('gdod') + ' - ' + v('tafkid');
+  document.getElementById('docGdodTafkid').textContent = hq ? v('tafkid') : v('gdod') + ' - ' + v('tafkid');
   updateBattalionLogo();
 }
 

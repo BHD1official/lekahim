@@ -13,11 +13,11 @@ function buildDocx(docx, d){
   const img=s=>{const u=b64(s);const {w,h}=pngSize(u);const box=76;const k=box/Math.max(w,h);return new ImageRun({type:'png',data:u,transformation:{width:Math.round(w*k),height:Math.round(h*k)}});};
   const sp=()=>new TextRun({text:'   ',size:24});
   // כל שורה: הטקסט ואם היא מודגשת (תואם לבלוק המקביל בתצוגה המקדימה - css/style.css .pdf-org-block)
+  const hq=!!d.hq;   // מפקדה: בלי גדוד ופלוגה (ובלי לוגו גדוד)
   const orgLines=[
     {t:'בית הספר לקצינים',bold:true},
     {t:'ע"ש רא"ל לסקוב',bold:true},
-    {t:'גדוד '+d.gdod,bold:true},
-    {t:'פלוגת '+d.pluga,bold:true},
+    ...(hq?[]:[{t:'גדוד '+d.gdod,bold:true},{t:'פלוגת '+d.pluga,bold:true}]),
     {t:'טלפון המטכ"לי: 03-9876543',bold:false},
     {t:'טלפון האזרחי: 03-1234567',bold:false},
     {t:'מספר הפקס: 03-1928376',bold:false},
@@ -39,7 +39,7 @@ function buildDocx(docx, d){
     borders:{top:NB,bottom:NB,left:NB,right:NB,insideHorizontal:NB,insideVertical:NB},
     rows:[new TableRow({children:[
       new TableCell({width:{size:ORG_W,type:WidthType.DXA},margins:NOM,borders:NOB,children:[orgPara]}),
-      new TableCell({width:{size:PAGE_W-ORG_W,type:WidthType.DXA},borders:NOB,children:[new Paragraph({alignment:AlignmentType.RIGHT,children:[img(d.behadLogo),sp(),img(d.gdodLogo)]})]})
+      new TableCell({width:{size:PAGE_W-ORG_W,type:WidthType.DXA},borders:NOB,children:[new Paragraph({alignment:AlignmentType.RIGHT,children:hq||!d.gdodLogo?[img(d.behadLogo)]:[img(d.behadLogo),sp(),img(d.gdodLogo)]})]})
     ]})]
   });
   const kids=[
@@ -62,7 +62,7 @@ function buildDocx(docx, d){
     width:{size:10318,type:WidthType.DXA},columnWidths:[4300,6018],
     borders:{top:NB,bottom:NB,left:NB,right:NB,insideHorizontal:NB,insideVertical:NB},
     rows:[new TableRow({children:[
-      new TableCell({width:{size:4300,type:WidthType.DXA},borders:NOB,children:[sig(d.fullName+','),sig(d.rank),sig(d.gdod+' - '+d.tafkid),sig('צוער בבית הספר לקצינים')]}),
+      new TableCell({width:{size:4300,type:WidthType.DXA},borders:NOB,children:[sig(d.fullName+','),sig(d.rank),sig(hq?d.tafkid:d.gdod+' - '+d.tafkid),sig('צוער בבית הספר לקצינים')]}),
       new TableCell({width:{size:6018,type:WidthType.DXA},borders:NOB,children:[new Paragraph({children:[]})]})
     ]})]
   }));
@@ -89,7 +89,7 @@ async function downloadWord(){
   try{
     const v=id=>document.getElementById(id).value;
     const t=id=>document.getElementById(id).textContent;
-    const d={behadLogo:LOGOS['בהד'],gdodLogo:LOGOS[v('gdod')],title:v('title'),nidon:v('nidon'),klali:v('klali'),moked:v('mokedTahkir'),tihum:v('tihum'),lekachim:v('lekachim'),mahHaya:v('mahHaya'),mahHayaTzarich:v('mahHayaTzarich'),pearim:v('pearim'),sibotPearim:v('sibotPearim'),gdod:v('gdod'),pluga:v('pluga'),hebDate:t('docHebDate'),gregDate:t('docGregDate'),fullName:v('fullName'),rank:v('rank'),tafkid:v('tafkid')};
+    const d={behadLogo:LOGOS['בהד'],hq:v('megama')==='מפקדה',gdodLogo:LOGOS[v('gdod')],title:v('title'),nidon:v('nidon'),klali:v('klali'),moked:v('mokedTahkir'),tihum:v('tihum'),lekachim:v('lekachim'),mahHaya:v('mahHaya'),mahHayaTzarich:v('mahHayaTzarich'),pearim:v('pearim'),sibotPearim:v('sibotPearim'),gdod:v('gdod'),pluga:v('pluga'),hebDate:t('docHebDate'),gregDate:t('docGregDate'),fullName:v('fullName'),rank:v('rank'),tafkid:v('tafkid')};
     
     const blob=await docx.Packer.toBlob(buildDocx(docx,d));
 

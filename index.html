@@ -41,13 +41,14 @@
             <label for="megama">מגמה</label>
       <select id="megama" required>
         <option value="" disabled selected hidden>בחירה</option>
-        <option value="נחשון">נחשון</option>
-        <option value="מעוז">מעוז</option>
+        <option value="מטה מוסדי">מטה מוסדי</option>
+        <option value="מטה מבצעי">מטה מבצעי</option>
         <option value="לוחמים">לוחמים</option>
         <option value="מומחים">מומחים</option>
+        <option value="מפקדה">מפקדה</option>
       </select>
 
-      <div class="row2">
+      <div class="row2" id="gdodPlugaRow">
         <div>
           <label for="gdod">גדוד</label>
           <select id="gdod" required></select>
@@ -58,8 +59,7 @@
         </div>
       </div>
 
-      <label for="tzevet">צוות</label>
-      <input type="text" id="tzevet" required>
+      
 
 <div class="logo-preview" hidden>
           <img id="battalionLogoImg" src="" alt="סמל גדוד">
@@ -112,8 +112,8 @@
     <div class="pdf-org-block">
       <div class="bold">בית הספר לקצינים</div>
       <div class="bold">ע"ש רא"ל לסקוב</div>
-      <div class="bold">גדוד <span id="docGdod"></span></div>
-      <div class="bold">פלוגת <span id="docPluga"></span></div>
+      <div class="bold" id="docGdodLine">גדוד <span id="docGdod"></span></div>
+      <div class="bold" id="docPlugaLine">פלוגת <span id="docPluga"></span></div>
       <div>טלפון המטכ"לי: 03-9876543</div>
       <div>טלפון האזרחי: 03-1234567</div>
       <div>מספר הפקס: 03-1928376</div>
