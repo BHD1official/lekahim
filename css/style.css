@@ -47,6 +47,14 @@ textarea{min-height:70px; resize:vertical;}
 }
 #generateBtn:disabled{opacity:0.6;}
 
+/* ---- שדות דו"ח התחקיר בטופס ---- */
+.rep-l1{padding-inline-start:16px;}
+.rep-l2{padding-inline-start:32px;}
+.rep-head{font-weight:700; font-size:15px; margin:18px 0 2px; color:var(--text);}
+.rep-field.rep-l0 > .rep-head:first-child{margin-top:6px;}
+.rep-hint{font-size:12.5px; color:var(--muted); margin:-2px 0 5px;}
+.rep-field > label{color:var(--text); font-weight:600;}
+
 /* ---- PDF page (A4) ---- */
 #pdfPage{
   position:relative; width:210mm; box-sizing:border-box; background:#ffffff; color:#000000;
@@ -69,10 +77,14 @@ textarea{min-height:70px; resize:vertical;}
 .pdf-logos{direction:ltr; display:flex; gap:3mm; background:#ffffff; padding:2mm;}
 .pdf-logos img{width:20mm; height:20mm; object-fit:contain;}
 .pdf-title{text-align:center; font-size:14pt; font-weight:700; margin:6mm 0 8mm;}
-.pdf-nidon{font-size:12pt; margin-bottom:6mm;}
+.pdf-nidon{font-size:12pt; margin-bottom:6mm; text-align:center;}
 .pdf-nidon b{font-weight:700;}
 .pdf-section{font-size:12pt; margin-bottom:5mm;}
-.pdf-section b{display:block; font-weight:700; margin-bottom:1.5mm;}
+.pdf-section > b{display:block; font-weight:700; margin-bottom:1.5mm;}
+.rep-line{margin-bottom:2.5mm; white-space:normal;}
+.rep-line b{font-weight:700; display:inline;}
+.rep-line.rep-l1{padding-inline-start:10mm;}
+.rep-line.rep-l2{padding-inline-start:20mm;}
 .pdf-sig{margin-top:14mm; direction:ltr; font-size:12pt; line-height:1.9;}
 .pdf-sig-inner{display:inline-flex; flex-direction:column; align-items:flex-end; direction:ltr;}
 .pdf-sig-inner > div{direction:rtl; white-space:nowrap;}
@@ -92,5 +104,5 @@ textarea{min-height:70px; resize:vertical;}
   .preview-outer{border:none; margin:0; overflow:visible;}
   #previewFrame{zoom:1 !important;}
   #pdfPage{width:auto; padding:0; margin:0;}
-  .pdf-sig, .pdf-section b{break-inside:avoid;}
+  .pdf-sig, .pdf-section > b{break-inside:avoid;}
 }

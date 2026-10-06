@@ -46,16 +46,14 @@ function buildDocx(docx, d){
     rtlP([tr('בלמ"ס',{bold:true})],{align:AlignmentType.CENTER,after:120}),
     header,
     rtlP([tr(d.title,{size:28,bold:true})],{align:AlignmentType.CENTER,before:240,after:240}),
-    rtlP([tr('הנידון: ',{bold:true}),...lines(d.nidon)],{after:200})
+    rtlP([tr('הנידון: ',{bold:true}),...lines(d.nidon)],{align:AlignmentType.CENTER,after:200})
   ];
-  [['כללי:',d.klali],['מוקד תחקיר:',d.moked],['תיחום התחקיר:',d.tihum],
-   ['מה היה:',d.mahHaya,true],['מה היה צריך להיות:',d.mahHayaTzarich,true],['פערים:',d.pearim,true],['הסיבות לפער:',d.sibotPearim,true],
-   ['לקחים:',d.lekachim]].forEach(([h,t,optional])=>{
-    if(optional && !String(t||'').trim()) return;   // שדה לא חובה שנשאר ריק - לא נכנס למסמך
-    kids.push(rtlP([tr(h,{bold:true})],{after:40}));
-    kids.push(rtlP(lines(t),{after:200}));
+  // סעיפי הדו"ח: כותרת מודגשת + התוכן שהוקלד באותה שורה. הזחה לפי עומק (1 ס"מ לכל רמה)
+  (d.report||[]).forEach(r=>{
+    const runs=[tr(r.label,{bold:true})];
+    if(!r.head) runs.push(tr(' '),...lines(r.text));
+    kids.push(new Paragraph({bidirectional:true,indent:{start:r.level*567},keepNext:r.head,spacing:{after:r.head?60:140,before:r.level===0&&r.head?120:0},children:runs}));
   });
-
   const sig=t=>rtlP([tr(t)],{after:60});
   kids.push(new Paragraph({spacing:{before:480},children:[]}));
   kids.push(new Table({
@@ -89,7 +87,7 @@ async function downloadWord(){
   try{
     const v=id=>document.getElementById(id).value;
     const t=id=>document.getElementById(id).textContent;
-    const d={behadLogo:LOGOS['בהד'],hq:v('megama')==='מפקדה',gdodLogo:LOGOS[v('gdod')],title:v('title'),nidon:v('nidon'),klali:v('klali'),moked:v('mokedTahkir'),tihum:v('tihum'),lekachim:v('lekachim'),mahHaya:v('mahHaya'),mahHayaTzarich:v('mahHayaTzarich'),pearim:v('pearim'),sibotPearim:v('sibotPearim'),gdod:v('gdod'),pluga:v('pluga'),hebDate:t('docHebDate'),gregDate:t('docGregDate'),fullName:v('fullName'),rank:v('rank'),tafkid:v('tafkid')};
+    const d={behadLogo:LOGOS['בהד'],hq:v('megama')==='מפקדה',gdodLogo:LOGOS[v('gdod')],title:v('title'),nidon:v('nidon'),report:collectReport(),gdod:v('gdod'),pluga:v('pluga'),hebDate:t('docHebDate'),gregDate:t('docGregDate'),fullName:v('fullName'),rank:v('rank'),tafkid:v('tafkid')};
     
     const blob=await docx.Packer.toBlob(buildDocx(docx,d));
 

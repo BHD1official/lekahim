@@ -6,6 +6,52 @@ function esc(s){
 function nl2br(s){ return esc(s).replace(/\n/g,'<br>'); }
 
 
+/* ---------- מבנה הדו"ח: שדות בטופס ופריסה שטוחה למסמך ---------- */
+// מספור לפי עומק: רמה 0 = א. ב. ג. | רמה 1 = 1. 2. 3. | רמה 2 = א. ב. ג.
+function marker(level,i){ return (level===1 ? String(i+1) : (HEB_LETTERS[i]||'')) + '.'; }
+
+function renderReportFields(){
+  const root = document.getElementById('reportFields');
+  root.innerHTML = '';
+  let n = 0;
+  (function walk(nodes, level, parent){
+    nodes.forEach((node,i)=>{
+      node.key = 'rep' + (n++);
+      const label = marker(level,i) + ' ' + node.title;
+      const box = document.createElement('div');
+      box.className = 'rep-field rep-l' + level;
+      if(node.children){
+        const h = document.createElement('div');
+        h.className = 'rep-head'; h.textContent = label + ':';
+        box.appendChild(h); parent.appendChild(box);
+        walk(node.children, level+1, parent);
+        return;
+      }
+      const lab = document.createElement('label'); lab.htmlFor = node.key;
+      lab.textContent = label + (node.optional ? ' (לא חובה)' : '');
+      box.appendChild(lab);
+      if(node.hint){ const h=document.createElement('div'); h.className='rep-hint'; h.textContent=node.hint; box.appendChild(h); }
+      const ta = document.createElement('textarea'); ta.id = node.key; ta.required = !node.optional;
+      box.appendChild(ta); parent.appendChild(box);
+    });
+  })(REPORT, 0, root);
+}
+
+// רשימה שטוחה של שורות המסמך: {level, label, head, text}. סעיף רשות שנשאר ריק לא נכנס.
+function collectReport(){
+  const out = [];
+  (function walk(nodes, level){
+    nodes.forEach((node,i)=>{
+      const label = marker(level,i) + ' ' + node.title;
+      if(node.children){ out.push({level, label: label+':', head:true, text:''}); walk(node.children, level+1); return; }
+      const text = document.getElementById(node.key).value.trim();
+      if(node.optional && !text) return;
+      out.push({level, label: label + (level===0 ? ':' : ' -'), head:false, text});
+    });
+  })(REPORT, 0);
+  return out;
+}
+
 /* ---------- בחירת גדוד ולוגו ---------- */
 // מגמת "מפקדה": אין גדוד ופלוגה - לא בטופס, לא במסמך ולא בלוגו
 function isHq(){ return document.getElementById('megama').value === 'מפקדה'; }
@@ -70,17 +116,8 @@ function buildDoc(){
   document.getElementById('docHebDate').textContent = getHebrewDateString(now);
   document.getElementById('docGregDate').textContent = getGregorianDateString(now);
   document.getElementById('docNidon').innerHTML = nl2br(v('nidon'));
-  document.getElementById('docKlali').innerHTML = nl2br(v('klali'));
-  document.getElementById('docMokedTahkir').innerHTML = nl2br(v('mokedTahkir'));
-  document.getElementById('docTihum').innerHTML = nl2br(v('tihum'));
-
-    [['MahHaya','mahHaya'],['MahHayaTzarich','mahHayaTzarich'],['Pearim','pearim'],['SibotPearim','sibotPearim']].forEach(([docId,fieldId])=>{
-    const val = v(fieldId);
-    document.getElementById('doc'+docId).innerHTML = nl2br(val);
-    document.getElementById('sec'+docId).style.display = val.trim() ? '' : 'none';
-  });
-  
-  document.getElementById('docLekachim').innerHTML = nl2br(v('lekachim'));
+  document.getElementById('docBody').innerHTML = collectReport().map(r =>
+    '<div class="rep-line rep-l'+r.level+'"><b>'+esc(r.label)+'</b>'+(r.head?'':' '+nl2br(r.text))+'</div>').join('');
   document.getElementById('docFullName').textContent = v('fullName');
   document.getElementById('docRank').textContent = v('rank');
   document.getElementById('docGdodTafkid').textContent = hq ? v('tafkid') : v('gdod') + ' - ' + v('tafkid');
@@ -121,5 +158,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('pdfBtn').addEventListener('click',downloadPdf);
   document.getElementById('backBtn').addEventListener('click',backToEdit);
   window.addEventListener('resize',fitPreview);
+  renderReportFields();
   populateGdod();
 });

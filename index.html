@@ -22,6 +22,9 @@
       <label for="title">כותרת העבודה</label>
       <input type="text" id="title" required>
 
+      <label for="nidon">הנידון</label>
+      <input type="text" id="nidon" required>
+
       <label for="fullName">שם מלא</label>
       <input type="text" id="fullName" required>
 
@@ -68,33 +71,8 @@
     </div>
 
     <div class="card">
-      <h2>תוכן המסמך</h2>
-      <label for="nidon">הנידון</label>
-      <input type="text" id="nidon" required>
-
-      <label for="klali">כללי</label>
-      <textarea id="klali" required></textarea>
-
-      <label for="mokedTahkir">מוקד תחקיר</label>
-      <textarea id="mokedTahkir" required></textarea>
-
-      <label for="tihum">תיחום התחקיר</label>
-      <textarea id="tihum" required></textarea>
-
-      <label for="mahHaya">מה היה </label>
-      <textarea id="mahHaya"></textarea>
-
-      <label for="mahHayaTzarich">מה היה צריך להיות </label>
-      <textarea id="mahHayaTzarich"></textarea>
-
-      <label for="pearim">פערים </label>
-      <textarea id="pearim"></textarea>
-
-      <label for="sibotPearim">הסיבות לפער </label>
-      <textarea id="sibotPearim"></textarea>
-
-      <label for="lekachim">לקחים</label>
-      <textarea id="lekachim" required></textarea>
+      <h2>דו"ח התחקיר</h2>
+      <div id="reportFields"></div>
     </div>
 
     <button type="button" id="generateBtn">תצוגה מקדימה</button>
@@ -127,16 +105,7 @@
   </div>
   <div class="pdf-title" id="docTitle"></div>
   <div class="pdf-nidon"><b>הנידון:</b> <span id="docNidon"></span></div>
-  <div class="pdf-section"><b>כללי:</b><span id="docKlali"></span></div>
-  <div class="pdf-section"><b>מוקד תחקיר:</b><span id="docMokedTahkir"></span></div>
-  <div class="pdf-section"><b>תיחום התחקיר:</b><span id="docTihum"></span></div>
-
-    <div class="pdf-section" id="secMahHaya"><b>מה היה:</b><span id="docMahHaya"></span></div>
-  <div class="pdf-section" id="secMahHayaTzarich"><b>מה היה צריך להיות:</b><span id="docMahHayaTzarich"></span></div>
-  <div class="pdf-section" id="secPearim"><b>פערים:</b><span id="docPearim"></span></div>
-  <div class="pdf-section" id="secSibotPearim"><b>הסיבות לפער:</b><span id="docSibotPearim"></span></div>
-
-  <div class="pdf-section"><b>לקחים:</b><span id="docLekachim"></span></div>
+  <div class="pdf-section"><div id="docBody"></div></div>
   <div class="pdf-sig"><div class="pdf-sig-inner">
     <div id="docFullName"></div>
     <div id="docRank"></div>
