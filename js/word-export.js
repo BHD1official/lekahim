@@ -1,11 +1,12 @@
 /* יצירת קובץ ה-Word: בניית המסמך, שמירה והכפתור "הורד Word" */
 
 function buildDocx(docx, d){
-  const {Document,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,AlignmentType,BorderStyle,ImageRun}=docx;
+  
+  const {Document,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,AlignmentType,BorderStyle,ImageRun,UnderlineType}=docx;
   const F={ascii:'David',hAnsi:'David',cs:'David',eastAsia:'David'};
   const NB={style:BorderStyle.NONE,size:0,color:'FFFFFF'};
   const NOB={top:NB,bottom:NB,left:NB,right:NB};
-  const tr=(t,o={})=>new TextRun({text:t,font:F,size:o.size||24,sizeComplexScript:o.size||24,bold:!!o.bold,boldComplexScript:!!o.bold,rightToLeft:true,break:o.br?1:undefined});
+  const tr=(t,o={})=>new TextRun({text:t,font:F,size:o.size||24,sizeComplexScript:o.size||24,bold:!!o.bold,boldComplexScript:!!o.bold,rightToLeft:true, underline:o.u?{type:UnderlineType.SINGLE}:undefined,break:o.br?1:undefined});
   const rtlP=(runs,o={})=>new Paragraph({bidirectional:true,alignment:o.align,spacing:{after:o.after===undefined?120:o.after,before:o.before||0},children:runs});
   const lines=(t,o={})=>String(t||'').split('\n').map((l,i)=>tr(l,{...o,br:i>0}));
   const pngSize=b=>({w:(b[16]<<24)|(b[17]<<16)|(b[18]<<8)|b[19],h:(b[20]<<24)|(b[21]<<16)|(b[22]<<8)|b[23]});
@@ -45,9 +46,7 @@ function buildDocx(docx, d){
   const kids=[
     rtlP([tr('בלמ"ס',{bold:true})],{align:AlignmentType.CENTER,after:120}),
     header,
-    rtlP([tr(d.title,{size:28,bold:true})],{align:AlignmentType.CENTER,before:240,after:240}),
-    rtlP([tr('הנידון: ',{bold:true}),...lines(d.nidon)],{align:AlignmentType.CENTER,after:200})
-  ];
+   rtlP([tr('הנידון: ',{bold:true,size:28,u:true}),...lines(d.nidon,{bold:true,size:28,u:true})],{align:AlignmentType.CENTER,before:240,after:240})  ];
   // סעיפי הדו"ח: כותרת מודגשת + התוכן שהוקלד באותה שורה. הזחה לפי עומק (1 ס"מ לכל רמה)
   (d.report||[]).forEach(r=>{
     const runs=[tr(r.label,{bold:true})];
@@ -69,6 +68,12 @@ function buildDocx(docx, d){
 }
 
 
+// שם הקובץ המוצע נלקח מהנידון (בלי תווים אסורים בשמות קבצים, ובאורך סביר)
+function fileBaseName(){
+  const n=(document.getElementById('nidon').value||'').replace(/[\\\/:*?"<>|\r\n]+/g,' ').replace(/\s+/g,' ').trim().slice(0,80);
+  return n||'מסמך';
+}
+
 async function saveBlob(blob,filename){
   const downloads=window.claude?await window.claude.use('downloads'):null;
   if(downloads){
@@ -87,12 +92,12 @@ async function downloadWord(){
   try{
     const v=id=>document.getElementById(id).value;
     const t=id=>document.getElementById(id).textContent;
-    const d={behadLogo:LOGOS['בהד'],hq:v('megama')==='מפקדה',gdodLogo:LOGOS[v('gdod')],title:v('title'),nidon:v('nidon'),report:collectReport(),gdod:v('gdod'),pluga:v('pluga'),hebDate:t('docHebDate'),gregDate:t('docGregDate'),fullName:v('fullName'),rank:v('rank'),tafkid:v('tafkid')};
+    const d={behadLogo:LOGOS['בהד'],hq:v('megama')==='מפקדה',gdodLogo:LOGOS[v('gdod')],nidon:v('nidon'),report:collectReport(),gdod:v('gdod'),pluga:v('pluga'),hebDate:t('docHebDate'),gregDate:t('docGregDate'),fullName:v('fullName'),rank:v('rank'),tafkid:v('tafkid')};
     
     const blob=await docx.Packer.toBlob(buildDocx(docx,d));
 
 
-    await saveBlob(blob,(v('title')||'מסמך')+'.docx');
+    await saveBlob(blob,fileBaseName()+'.docx');
   }catch(err){ console.error(err); alert('אירעה שגיאה ביצירת קובץ ה-Word. נסו שוב.'); }
   finally{ btn.disabled=false; btn.textContent='הורד Word'; }
 }
@@ -100,7 +105,7 @@ async function downloadWord(){
 /* הורדת PDF: פותח את חלון ההדפסה של הדפדפן רק עם דף המסמך (ראו @media print ב-css/style.css).
    בחלון ההדפסה בוחרים יעד "שמירה כ-PDF". הטקסט נשאר טקסט אמיתי (ניתן לסימון) והמראה זהה לתצוגה המקדימה. */
 function downloadPdf(){
-  const title=document.getElementById('title').value||'מסמך';
+  const title=fileBaseName();
   const old=document.title;
   document.title=title; // שם הקובץ המוצע ב"שמירה כ-PDF"
   const restore=()=>{ document.title=old; window.removeEventListener('afterprint',restore); };

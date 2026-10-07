@@ -107,7 +107,6 @@ function updateBattalionLogo(){
 function buildDoc(){
   const v = id => document.getElementById(id).value;
   const now = new Date();
-  document.getElementById('docTitle').textContent = v('title') || 'ללא כותרת';
   const hq = isHq();
   document.getElementById('docGdod').textContent = v('gdod');
   document.getElementById('docPluga').textContent = v('pluga');

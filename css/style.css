@@ -77,7 +77,7 @@ textarea{min-height:70px; resize:vertical;}
 .pdf-logos{direction:ltr; display:flex; gap:3mm; background:#ffffff; padding:2mm;}
 .pdf-logos img{width:20mm; height:20mm; object-fit:contain;}
 .pdf-title{text-align:center; font-size:14pt; font-weight:700; margin:6mm 0 8mm;}
-.pdf-nidon{font-size:12pt; margin-bottom:6mm; text-align:center;}
+.pdf-nidon{font-size:14pt; font-weight:700; text-decoration:underline; margin:6mm 0 8mm; text-align:center;}
 .pdf-nidon b{font-weight:700;}
 .pdf-section{font-size:12pt; margin-bottom:5mm;}
 .pdf-section > b{display:block; font-weight:700; margin-bottom:1.5mm;}
